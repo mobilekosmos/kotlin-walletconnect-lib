@@ -15,6 +15,7 @@ interface Session {
     fun update(accounts: List<String>, chainId: Long)
     fun kill()
 
+    fun chainId(): Long?
     fun peerMeta(): PeerMeta?
     fun approvedAccounts(): List<String>?
 

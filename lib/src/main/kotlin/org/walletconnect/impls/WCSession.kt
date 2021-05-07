@@ -81,7 +81,9 @@ class WCSession(
         }
     }
 
+    override fun chainId(): Long? = chainId
     override fun peerMeta(): Session.PeerMeta? = peerMeta
+
 
     override fun approvedAccounts(): List<String>? = approvedAccounts
 
