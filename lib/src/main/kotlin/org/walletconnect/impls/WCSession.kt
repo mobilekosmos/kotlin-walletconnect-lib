@@ -206,7 +206,13 @@ class WCSession(
             is Session.MethodCall.SendTransaction -> {
                 accountToCheck = data.from
             }
+            is Session.MethodCall.PersonalSignMessage -> {
+                accountToCheck = data.address
+            }
             is Session.MethodCall.SignMessage -> {
+                accountToCheck = data.address
+            }
+            is Session.MethodCall.SignTypedDataMessage -> {
                 accountToCheck = data.address
             }
             is Session.MethodCall.Response -> {

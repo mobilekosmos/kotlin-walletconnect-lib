@@ -102,7 +102,9 @@ class MoshiPayloadAdapter(moshi: Moshi) : Session.PayloadAdapter {
                         "wc_sessionRequest" -> it.toSessionRequest()
                         "wc_sessionUpdate" -> it.toSessionUpdate()
                         "eth_sendTransaction" -> it.toSendTransaction()
+                        "personal_sign" -> it.toPersonalSignMessage()
                         "eth_sign" -> it.toSignMessage()
+                        "eth_signTypedData" -> it.toSignTypedDataMessage()
                         null -> it.toResponse()
                         else -> it.toCustom()
                     }
@@ -135,11 +137,25 @@ class MoshiPayloadAdapter(moshi: Moshi) : Session.PayloadAdapter {
         return Session.MethodCall.SendTransaction(getId(), from, to, nonce, gasPrice, gasLimit, value, txData)
     }
 
+    private fun Map<String, *>.toPersonalSignMessage(): Session.MethodCall.PersonalSignMessage {
+        val params = this["params"] as? List<*> ?: throw IllegalArgumentException("params missing")
+        val address = params.getOrNull(0) as? String ?: throw IllegalArgumentException("Missing address")
+        val message = params.getOrNull(1) as? String ?: throw IllegalArgumentException("Missing message")
+        return Session.MethodCall.PersonalSignMessage(getId(), address, message)
+    }
+
     private fun Map<String, *>.toSignMessage(): Session.MethodCall.SignMessage {
         val params = this["params"] as? List<*> ?: throw IllegalArgumentException("params missing")
         val address = params.getOrNull(0) as? String ?: throw IllegalArgumentException("Missing address")
         val message = params.getOrNull(1) as? String ?: throw IllegalArgumentException("Missing message")
         return Session.MethodCall.SignMessage(getId(), address, message)
+    }
+
+    private fun Map<String, *>.toSignTypedDataMessage(): Session.MethodCall.SignTypedDataMessage {
+        val params = this["params"] as? List<*> ?: throw IllegalArgumentException("params missing")
+        val address = params.getOrNull(0) as? String ?: throw IllegalArgumentException("Missing address")
+        val message = params.getOrNull(1) as? String ?: throw IllegalArgumentException("Missing message")
+        return Session.MethodCall.SignTypedDataMessage(getId(), address, message)
     }
 
     private fun Map<String, *>.toCustom(): Session.MethodCall.Custom {
@@ -169,7 +185,9 @@ class MoshiPayloadAdapter(moshi: Moshi) : Session.PayloadAdapter {
                 is Session.MethodCall.Response -> this.toMap()
                 is Session.MethodCall.SessionUpdate -> this.toMap()
                 is Session.MethodCall.SendTransaction -> this.toMap()
+                is Session.MethodCall.PersonalSignMessage -> this.toMap()
                 is Session.MethodCall.SignMessage -> this.toMap()
+                is Session.MethodCall.SignTypedDataMessage -> this.toMap()
                 is Session.MethodCall.Custom -> this.toMap()
             }
         ).toByteArray()
@@ -193,9 +211,19 @@ class MoshiPayloadAdapter(moshi: Moshi) : Session.PayloadAdapter {
             )
         )
 
+    private fun Session.MethodCall.PersonalSignMessage.toMap() =
+        jsonRpc(
+            id, "personal_sign", address, message
+        )
+
     private fun Session.MethodCall.SignMessage.toMap() =
         jsonRpc(
             id, "eth_sign", address, message
+        )
+
+    private fun Session.MethodCall.SignTypedDataMessage.toMap() =
+        jsonRpc(
+            id, "eth_signTypedData", address, message
         )
 
     private fun Session.MethodCall.Response.toMap() =

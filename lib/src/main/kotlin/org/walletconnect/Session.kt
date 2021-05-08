@@ -148,7 +148,9 @@ interface Session {
                 val data: String
         ) : MethodCall(id)
 
+        data class PersonalSignMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
         data class SignMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
+        data class SignTypedDataMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
 
         data class Custom(val id: Long, val method: String, val params: List<*>?) : MethodCall(id)
 
