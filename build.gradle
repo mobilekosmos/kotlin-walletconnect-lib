@@ -1,7 +1,7 @@
 buildscript {
     ext {
         versions = [
-                kotlin                    : "1.4.31",
+                kotlin                    : "1.5.0",
                 moshi                     : '1.8.0',
                 okhttp                    : '3.11.0',
                 jupiter                   : '5.7.0',
@@ -31,13 +31,15 @@ buildscript {
     }
 
     repositories {
+        google()
         gradlePluginPortal()
-	mavenCentral()
+	    mavenCentral()
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.38.0'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         // How can we move this to the sample folder
         //classpath deps.android.gradlePlugin
     }

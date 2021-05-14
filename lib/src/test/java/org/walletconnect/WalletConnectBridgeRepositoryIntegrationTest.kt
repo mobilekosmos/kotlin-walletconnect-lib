@@ -19,7 +19,7 @@ class WalletConnectBridgeRepositoryIntegrationTest {
     //@Test
     fun approveSession() {
         val client = OkHttpClient.Builder().pingInterval(1000, TimeUnit.MILLISECONDS).build()
-        val moshi = Moshi.Builder().build()
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val sessionDir = File("build/tmp/").apply { mkdirs() }
         val sessionStore = FileWCSessionStore(File(sessionDir, "test_store.json").apply { createNewFile() }, moshi)
         val uri =

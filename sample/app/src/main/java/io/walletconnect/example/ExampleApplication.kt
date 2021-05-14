@@ -25,7 +25,7 @@ class ExampleApplication : MultiDexApplication() {
     }
 
     private fun initMoshi() {
-        moshi = Moshi.Builder().build()
+        moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     }
 
 
