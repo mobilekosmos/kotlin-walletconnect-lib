@@ -5,8 +5,8 @@ android {
     compileSdkVersion versions.compileSdk
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -78,5 +78,9 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+
+    // We need to specify this extra because the kotlin plugin adds an older version leading
+    // to warning about using different kotlin versions.
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
 }

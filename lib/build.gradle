@@ -18,6 +18,10 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
+    // We need to specify this extra because the kotlin plugin adds an older version leading
+    // to warning about using different kotlin versions.
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+
     testImplementation 'org.assertj:assertj-core:3.19.0'
 
     // (Required) Writing and executing Unit Tests on the JUnit Platform
