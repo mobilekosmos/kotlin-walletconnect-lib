@@ -1,29 +1,35 @@
-apply plugin: "kotlin"
-apply plugin: 'maven'
-
-repositories {
-    google()
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'maven-publish'
 }
 
 dependencies {
-    implementation "com.github.komputing:khex:1.1.0"
+    // KHex is a Kotlin multiplatform library to deal with hexadecimal encoding and decoding.
+    implementation "com.github.komputing:khex:$versions.khex"
 
-    implementation "org.bouncycastle:bcprov-jdk15to18:1.68"
+    implementation "org.bouncycastle:bcprov-jdk15to18:1.69"
 
-    implementation 'com.squareup.moshi:moshi:1.8.0'
+    implementation "com.squareup.moshi:moshi:${versions.moshi}"
     // TODO: it would be better to use the generated adapter by moshi
     // but for that we should move the implementations in different modules
     //kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$versions.moshi"
 
     implementation "com.squareup.okhttp3:okhttp:$versions.okhttp"
 
-    testImplementation 'org.assertj:assertj-core:3.19.0'
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.jupiter}"
-    testImplementation "org.junit.jupiter:junit-jupiter-params:${versions.jupiter}"
-    testRuntime "org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}"
+    // We need to specify this extra because the kotlin plugin adds an older version leading
+    // to warning about using different kotlin versions.
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+
+    // (Required) Writing and executing Unit Tests on the JUnit Platform
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${versions.jupiter}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${versions.jupiter}"
+
+    // (Optional) If you need "Parameterized Tests"
+    testImplementation "org.junit.jupiter:junit-jupiter-params:${versions.jupiter}"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$versions.okhttp"
 }
@@ -31,3 +37,21 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called “walletconnectPublication”.
+            walletconnectPublication(MavenPublication) {
+                // Applies the component for the debug build variant.
+                from components.java
+            }
+        }
+    }
+}
+
