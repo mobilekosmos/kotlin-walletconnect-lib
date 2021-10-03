@@ -1,6 +1,7 @@
 package org.walletconnect
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import org.junit.Test
 import org.walletconnect.impls.FileWCSessionStore

@@ -1,7 +1,8 @@
 package io.walletconnect.example
 
-import androidx.multidex.MultiDexApplication
+import android.app.Application
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.walletconnect.example.server.BridgeServer
 import okhttp3.OkHttpClient
 import org.komputing.khex.extensions.toNoPrefixHexString
@@ -11,7 +12,7 @@ import org.walletconnect.nullOnThrow
 import java.io.File
 import java.util.*
 
-class ExampleApplication : MultiDexApplication() {
+class ExampleApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initMoshi()
@@ -43,13 +44,13 @@ class ExampleApplication : MultiDexApplication() {
         private lateinit var moshi: Moshi
         private lateinit var bridge: BridgeServer
         private lateinit var storage: WCSessionStore
-        lateinit var config: Session.Config
+        lateinit var config: Session.FullyQualifiedConfig
         lateinit var session: Session
 
         fun resetSession() {
             nullOnThrow { session }?.clearCallbacks()
             val key = ByteArray(32).also { Random().nextBytes(it) }.toNoPrefixHexString()
-            config = Session.Config(UUID.randomUUID().toString(), "http://localhost:${BridgeServer.PORT}", key)
+            config = Session.FullyQualifiedConfig(UUID.randomUUID().toString(), "http://localhost:${BridgeServer.PORT}", key)
             session = WCSession(config,
                     MoshiPayloadAdapter(moshi),
                     storage,
