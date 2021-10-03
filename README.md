@@ -18,6 +18,6 @@ Add the dependency (replace the version by the latest release):
 
 ```gradle
 dependencies {
-	implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.9.2'
+	implementation 'com.github.WalletConnect:kotlin-walletconnect-lib:0.9.9.3'
 }
 ```
