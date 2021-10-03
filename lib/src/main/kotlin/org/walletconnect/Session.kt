@@ -150,8 +150,18 @@ interface Session {
                 val data: String
         ) : MethodCall(id)
 
+        /**
+         * For the different sign types refer to https://docs.metamask.io/guide/signing-data.html#a-brief-history.
+         */
         data class PersonalSignMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
+        /**
+         * Makes the signing message unreadable to the user, use PersonalSignMessage or SignTypedDataMessage instead.
+         * For the different sign types refer to https://docs.metamask.io/guide/signing-data.html#a-brief-history.
+         * */
         data class SignMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
+        /**
+         * For the different sign types refer to https://docs.metamask.io/guide/signing-data.html#a-brief-history.
+         */
         data class SignTypedDataMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
 
         data class Custom(val id: Long, val method: String, val params: List<*>?) : MethodCall(id)
