@@ -15,6 +15,7 @@ repositories {
 ```
 
 Add the dependency (replace the version by the latest release):
+Disclaimer: don't use this exact address in production as I may delete this proyect anytime, you can fork this proyect and change the address by your own github repository.
 
 ```gradle
 dependencies {
