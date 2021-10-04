@@ -153,7 +153,7 @@ interface Session {
         /**
          * For the different sign types refer to https://docs.metamask.io/guide/signing-data.html#a-brief-history.
          */
-        data class PersonalSignMessage(val id: Long, val address: String, val message: String) : MethodCall(id)
+        data class PersonalSignMessage(val id: Long, val message: String, val address: String) : MethodCall(id)
         /**
          * Makes the signing message unreadable to the user, use PersonalSignMessage or SignTypedDataMessage instead.
          * For the different sign types refer to https://docs.metamask.io/guide/signing-data.html#a-brief-history.
