@@ -51,11 +51,17 @@ class ExampleApplication : Application() {
             nullOnThrow { session }?.clearCallbacks()
             val key = ByteArray(32).also { Random().nextBytes(it) }.toNoPrefixHexString()
             config = Session.FullyQualifiedConfig(UUID.randomUUID().toString(), "http://localhost:${BridgeServer.PORT}", key)
+            // The walletConnect app freezes/crashes if "icons" in passed PeerMeta is not filled, so pass at least an empty list.
             session = WCSession(config,
                     MoshiPayloadAdapter(moshi),
                     storage,
                     OkHttpTransport.Builder(client, moshi),
-                    Session.PeerMeta(name = "Example App")
+                    Session.PeerMeta(
+                        url = "www.walletconnect.org",
+                        name = "WalletConnect Example App",
+                        description = "WalletConnect Example App",
+                        icons = listOf()
+                    )
             )
             session.offer()
         }
