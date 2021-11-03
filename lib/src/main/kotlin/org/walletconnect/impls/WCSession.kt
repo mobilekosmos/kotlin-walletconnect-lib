@@ -13,7 +13,8 @@ class WCSession(
         private val sessionStore: WCSessionStore,
         transportBuilder: Session.Transport.Builder,
         clientMeta: Session.PeerMeta,
-        clientId: String? = null
+        clientId: String? = null,
+        _chainId: Long? = null
 ) : Session {
 
     private val keyLock = Any()
@@ -46,7 +47,7 @@ class WCSession(
         clientData = sessionStore.load(config.handshakeTopic)?.let {
             currentKey = it.currentKey
             approvedAccounts = it.approvedAccounts
-            chainId = it.chainId
+            this.chainId = it.chainId
             handshakeId = it.handshakeId
             peerId = it.peerData?.id
             peerMeta = it.peerData?.meta
@@ -54,7 +55,7 @@ class WCSession(
                 throw IllegalArgumentException("Provided clientId is different from stored clientId")
             it.clientData
         } ?: run {
-            Session.PeerData(clientId ?: UUID.randomUUID().toString(), clientMeta)
+            Session.PeerData(clientId ?: UUID.randomUUID().toString(), clientMeta, _chainId)
         }
         storeSession()
     }
@@ -114,6 +115,28 @@ class WCSession(
             handshakeId = requestId
         }
     }
+//    Only used for testing purposes.
+//    override fun offer() {
+//        if (transport.connect()) {
+//            val requestId = createCallId()
+//            val params = mutableMapOf<String, Any?>()
+//            params["peerId"] = this.clientData.id
+//            this.clientData.meta?.intoMap(params)
+//            params["chainId"] = 2
+//
+//            send(Session.MethodCall.Custom(requestId,"wc_sessionRequest", listOf(params)), topic = config.handshakeTopic, callback = { resp ->
+//                (resp.result as? Map<String, *>)?.extractSessionParams()?.let { params ->
+//                    peerId = params.peerData?.id
+//                    peerMeta = params.peerData?.meta
+//                    approvedAccounts = params.accounts
+//                    chainId = params.chainId
+//                    storeSession()
+//                    propagateToCallbacks { onStatus(if (params.approved) Session.Status.Approved else Session.Status.Closed) }
+//                }
+//            })
+//            handshakeId = requestId
+//        }
+//    }
 
     override fun approve(accounts: List<String>, chainId: Long) {
         val handshakeId = handshakeId ?: return
@@ -195,6 +218,7 @@ class WCSession(
                 handshakeId = data.id
                 peerId = data.peer.id
                 peerMeta = data.peer.meta
+                chainId = data.peer.chainId
                 storeSession()
             }
             is Session.MethodCall.SessionUpdate -> {
@@ -255,7 +279,7 @@ class WCSession(
                 WCSessionStore.State(
                         config,
                         clientData,
-                        peerId?.let { Session.PeerData(it, peerMeta) },
+                        peerId?.let { Session.PeerData(it, peerMeta, chainId) },
                         handshakeId,
                         currentKey,
                         approvedAccounts,

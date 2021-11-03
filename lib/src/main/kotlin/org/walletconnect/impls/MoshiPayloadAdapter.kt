@@ -192,6 +192,23 @@ class MoshiPayloadAdapter(moshi: Moshi) : Session.PayloadAdapter {
             }
         ).toByteArray()
 
+    // Only used to verify JSON is correct.
+//    private fun Session.MethodCall.toBytes(): ByteArray {
+//        val json = mapAdapter.toJson(
+//            when (this) {
+//                is Session.MethodCall.SessionRequest -> this.toMap()
+//                is Session.MethodCall.Response -> this.toMap()
+//                is Session.MethodCall.SessionUpdate -> this.toMap()
+//                is Session.MethodCall.SendTransaction -> this.toMap()
+//                is Session.MethodCall.PersonalSignMessage -> this.toMap()
+//                is Session.MethodCall.SignMessage -> this.toMap()
+//                is Session.MethodCall.SignTypedDataMessage -> this.toMap()
+//                is Session.MethodCall.Custom -> this.toMap()
+//            }
+//        )
+//        return json.toByteArray()
+//    }
+
     private fun Session.MethodCall.SessionRequest.toMap() =
         jsonRpc(id, "wc_sessionRequest", peer.intoMap())
 

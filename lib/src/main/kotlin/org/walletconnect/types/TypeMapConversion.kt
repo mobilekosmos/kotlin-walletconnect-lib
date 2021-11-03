@@ -4,16 +4,16 @@ import org.walletconnect.Session
 import org.walletconnect.nullOnThrow
 
 fun Session.PeerMeta.intoMap(params: MutableMap<String, Any?> = mutableMapOf()) =
-        params.also {
-            params["peerMeta"] =
-                    mutableMapOf<String, Any>(
-                            "description" to (description ?: ""),
-                            "url" to (url ?: ""),
-                            "name" to (name ?: "")
-                    ).apply {
-                        icons?.let { put("icons", it) }
-                    }
-        }
+    params.also {
+        params["peerMeta"] =
+            mutableMapOf<String, Any>(
+                "description" to (description ?: ""),
+                "url" to (url ?: ""),
+                "name" to (name ?: "")
+            ).apply {
+                icons?.let { put("icons", it) }
+            }
+    }
 
 fun Map<*, *>?.extractPeerMeta(): Session.PeerMeta {
     val description = this?.get("description") as? String
@@ -25,24 +25,26 @@ fun Map<*, *>?.extractPeerMeta(): Session.PeerMeta {
 
 
 fun Session.PeerData.intoMap(params: MutableMap<String, Any?> = mutableMapOf()) =
-        params.also {
-            params["peerId"] = this.id
-            this.meta?.intoMap(params)
-        }
+    params.also {
+        params["peerId"] = this.id
+        this.meta?.intoMap(params)
+        params["chainId"] = this.chainId
+    }
 
 fun Map<*, *>.extractPeerData(): Session.PeerData {
     val peerId = this["peerId"] as? String ?: throw IllegalArgumentException("peerId missing")
     val peerMeta = this["peerMeta"] as? Map<*, *>
-    return Session.PeerData(peerId, peerMeta.extractPeerMeta())
+    val chainId = this["chainId"] as? Long ?: throw IllegalArgumentException("chainId missing")
+    return Session.PeerData(peerId, peerMeta.extractPeerMeta(), chainId)
 }
 
 fun Session.SessionParams.intoMap(params: MutableMap<String, Any?> = mutableMapOf()) =
-        params.also {
-            it["approved"] = approved
-            it["chainId"] = chainId
-            it["accounts"] = accounts
-            this.peerData?.intoMap(params)
-        }
+    params.also {
+        it["approved"] = approved
+        it["chainId"] = chainId
+        it["accounts"] = accounts
+        this.peerData?.intoMap(params)
+    }
 
 fun Map<String, *>.extractSessionParams(): Session.SessionParams {
     val approved = this["approved"] as? Boolean ?: throw IllegalArgumentException("approved missing")
@@ -55,19 +57,19 @@ fun Map<String, *>.extractSessionParams(): Session.SessionParams {
 fun Map<String, *>.toSessionRequest(): Session.MethodCall.SessionRequest {
     val params = this["params"] as? List<*> ?: throw IllegalArgumentException("params missing")
     val data = params.firstOrNull() as? Map<*, *>
-            ?: throw IllegalArgumentException("Invalid params")
+        ?: throw IllegalArgumentException("Invalid params")
 
     return Session.MethodCall.SessionRequest(
-            getId(),
-            data.extractPeerData()
+        getId(),
+        data.extractPeerData()
     )
 }
 
 fun Session.Error.intoMap(params: MutableMap<String, Any?> = mutableMapOf()) =
-        params.also {
-            it["code"] = code
-            it["message"] = message
-        }
+    params.also {
+        it["code"] = code
+        it["message"] = message
+    }
 
 fun Map<*, *>.extractError(): Session.Error {
     val code = (this["code"] as? Double)?.toLong()
@@ -76,10 +78,10 @@ fun Map<*, *>.extractError(): Session.Error {
 }
 
 fun Map<String, *>.getId(): Long =
-        (this["id"] as? Double)?.toLong() ?: throw IllegalArgumentException("id missing")
+    (this["id"] as? Double)?.toLong() ?: throw IllegalArgumentException("id missing")
 
 
 fun List<*>.toStringList(): List<String> =
-        this.map {
-            (it as? String) ?: throw IllegalArgumentException("List contains non-String values-en")
-        }
+    this.map {
+        (it as? String) ?: throw IllegalArgumentException("List contains non-String values-en")
+    }

@@ -169,7 +169,7 @@ interface Session {
         data class Response(val id: Long, val result: Any?, val error: Error? = null) : MethodCall(id)
     }
 
-    data class PeerData(val id: String, val meta: PeerMeta?)
+    data class PeerData(val id: String, val meta: PeerMeta?, val chainId: Long? = null)
     data class PeerMeta(
             val url: String? = null,
             val name: String? = null,

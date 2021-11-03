@@ -61,8 +61,8 @@ class ExampleApplication : Application() {
                         name = "WalletConnect Example App",
                         description = "WalletConnect Example App",
                         icons = listOf()
-                    )
-            )
+                    ),
+            _chainId = null)
             session.offer()
         }
     }
