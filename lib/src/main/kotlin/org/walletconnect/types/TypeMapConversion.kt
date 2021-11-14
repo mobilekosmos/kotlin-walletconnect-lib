@@ -34,7 +34,7 @@ fun Session.PeerData.intoMap(params: MutableMap<String, Any?> = mutableMapOf()) 
 fun Map<*, *>.extractPeerData(): Session.PeerData {
     val peerId = this["peerId"] as? String ?: throw IllegalArgumentException("peerId missing")
     val peerMeta = this["peerMeta"] as? Map<*, *>
-    val chainId = this["chainId"] as? Long ?: throw IllegalArgumentException("chainId missing")
+    val chainId = this["chainId"] as? Long
     return Session.PeerData(peerId, peerMeta.extractPeerMeta(), chainId)
 }
 
@@ -51,6 +51,8 @@ fun Map<String, *>.extractSessionParams(): Session.SessionParams {
     val chainId = (this["chainId"] as? Double)?.toLong()
     val accounts = nullOnThrow { (this["accounts"] as? List<*>)?.toStringList() }
 
+    // TODO: maybe log error out? if extractPeerData fails as it was the case once you are sending
+    // a null peerData which leads to the request being ignored by the wallets.
     return Session.SessionParams(approved, chainId, accounts, nullOnThrow { this.extractPeerData() })
 }
 
