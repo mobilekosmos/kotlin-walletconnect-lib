@@ -22,7 +22,7 @@ class MainActivity : Activity(), Session.Callback {
     private lateinit var mScreenMainBinding: ScreenMainBinding
 
     override fun onStatus(status: Session.Status) {
-        when(status) {
+        when (status) {
             Session.Status.Approved -> adaptUIAfterSessionApproved()
             Session.Status.Closed -> adaptUIAfterSessionClosed()
             Session.Status.Connected -> {
@@ -54,7 +54,8 @@ class MainActivity : Activity(), Session.Callback {
 
     private fun adaptUIAfterSessionApproved() {
         mUiScope.launch {
-            mScreenMainBinding.screenMainStatus.text = "Connected: ${ExampleApplication.session.approvedAccounts()}"
+            mScreenMainBinding.screenMainStatus.text =
+                "Connected: ${ExampleApplication.session.approvedAccounts()}"
             mScreenMainBinding.screenMainConnectButton.visibility = View.GONE
             mScreenMainBinding.screenMainDisconnectButton.visibility = View.VISIBLE
             mScreenMainBinding.screenMainTxButton.visibility = View.VISIBLE
@@ -88,20 +89,43 @@ class MainActivity : Activity(), Session.Callback {
         }
         mScreenMainBinding.screenMainTxButton.setOnClickListener {
             val from = ExampleApplication.session.approvedAccounts()?.first()
-                    ?: return@setOnClickListener
+                ?: return@setOnClickListener
             val txRequest = System.currentTimeMillis()
             ExampleApplication.session.performMethodCall(
-                    Session.MethodCall.SendTransaction(
-                            txRequest,
-                            from,
-                            "0x24EdA4f7d0c466cc60302b9b5e9275544E5ba552",
-                            null,
-                            null,
-                            null,
-                            "0x5AF3107A4000",
-                            ""
-                    ),
-                    ::handleResponse
+                Session.MethodCall.SendTransaction(
+                    txRequest,
+                    from,
+                    "0x24EdA4f7d0c466cc60302b9b5e9275544E5ba552",
+                    null,
+                    null,
+                    null,
+                    "0x5AF3107A4000",
+                    ""
+                ),
+                ::handleResponse
+            )
+            this.mTxRequest = txRequest
+            navigateToWallet()
+        }
+        mScreenMainBinding.screenTxErc20Button.setOnClickListener {
+            val from = ExampleApplication.session.approvedAccounts()?.first()
+                ?: return@setOnClickListener
+            val txRequest = System.currentTimeMillis()
+            ExampleApplication.session.performMethodCall(
+                Session.MethodCall.SendTransaction(
+                    txRequest,
+                    from,
+                    "0x3ac1c6ff50007ee705f36e40F7Dc6f393b1bc5e7",
+                    null,
+                    null,
+                    null,
+                    "0",
+                    data = Web3TransactionUtils.encodeTransferData(
+                        "0x24EdA4f7d0c466cc60302b9b5e9275544E5ba552",
+                        "1".toBigInteger()
+                    )
+                ),
+                ::handleResponse
             )
             this.mTxRequest = txRequest
             navigateToWallet()

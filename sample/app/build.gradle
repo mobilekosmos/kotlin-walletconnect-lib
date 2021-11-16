@@ -83,4 +83,5 @@ dependencies {
     // to warning about using different kotlin versions.
     implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
+    implementation ('org.web3j:core:4.8.8-android')
 }
