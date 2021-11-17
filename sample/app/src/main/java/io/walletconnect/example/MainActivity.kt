@@ -59,6 +59,7 @@ class MainActivity : Activity(), Session.Callback {
             mScreenMainBinding.screenMainConnectButton.visibility = View.GONE
             mScreenMainBinding.screenMainDisconnectButton.visibility = View.VISIBLE
             mScreenMainBinding.screenMainTxButton.visibility = View.VISIBLE
+            mScreenMainBinding.screenTxErc20Button.visibility = View.VISIBLE
         }
     }
 
@@ -68,6 +69,7 @@ class MainActivity : Activity(), Session.Callback {
             mScreenMainBinding.screenMainConnectButton.visibility = View.VISIBLE
             mScreenMainBinding.screenMainDisconnectButton.visibility = View.GONE
             mScreenMainBinding.screenMainTxButton.visibility = View.GONE
+            mScreenMainBinding.screenTxErc20Button.visibility = View.GONE
         }
     }
 
@@ -119,7 +121,7 @@ class MainActivity : Activity(), Session.Callback {
                     null,
                     null,
                     null,
-                    "0",
+                    "",
                     data = Web3TransactionUtils.encodeTransferData(
                         "0x24EdA4f7d0c466cc60302b9b5e9275544E5ba552",
                         "1".toBigInteger()

@@ -57,6 +57,16 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    configurations.all {
+        c -> c.resolutionStrategy.eachDependency {
+            DependencyResolveDetails dependency ->
+                println dependency.requested.group
+                if (dependency.requested.group == 'org.bouncycastle') {
+                    dependency.useTarget 'org.bouncycastle:bcprov-jdk15to18:1.69'
+                }
+        }
+    }
 }
 
 dependencies {
