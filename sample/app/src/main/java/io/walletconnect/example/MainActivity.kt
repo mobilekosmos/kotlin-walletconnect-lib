@@ -115,7 +115,7 @@ class MainActivity : Activity(), Session.Callback {
                 Session.MethodCall.SendTransaction(
                     txRequest,
                     from,
-                    "0x3ac1c6ff50007ee705f36e40F7Dc6f393b1bc5e7",
+                    "0xdac17f958d2ee523a2206206994597c13d831ec7",
                     null,
                     null,
                     null,
